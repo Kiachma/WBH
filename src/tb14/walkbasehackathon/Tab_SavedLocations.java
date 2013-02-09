@@ -6,10 +6,12 @@ import java.util.List;
 import tb14.walkbasehackathon.Adapter.LocationAdapter;
 import tb14.walkbasehackathon.DAOs.LocationDAO;
 import tb14.walkbasehackathon.DTO.Location;
+import android.R.integer;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,21 +53,28 @@ public class Tab_SavedLocations extends Fragment {
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					final int position, long id) {
+				final Location location = (Location) adapter.getItem(position);
+				
+				String name = location.getName();
+				Double lat = location.getLatitude();
+				Double lon = location.getLongitude();
+				Double acc = location.getAccuracy();
+				
+				
 				// When clicked, show a toast with the TextView text
 				Log.v(TAG, "item "+position+" clicked");
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-				builder.setMessage("WAAAAAH").setTitle("Weh?");
-				builder.setPositiveButton("HOKAY", new DialogInterface.OnClickListener() {
+				builder.setTitle("Delete "+name+"?");
+				builder.setMessage("Longitude: "+lon+"\n Latitude: "+lat+"\nAccuracy: "+acc+"\n");
+				builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						Log.v(TAG, "DELETE EVERYTHING!");
-					    Location location = (Location) adapter.getItem(position);
 					    locationDAO.deleteLocation(location);
 					    adapter.remove(location);
 					}
 				});
-				builder.setNegativeButton("NO, I CLEAN!", null);
+				builder.setNegativeButton("Cancel", null);
 
 				
 				AlertDialog dialog = builder.create();
@@ -79,6 +88,8 @@ public class Tab_SavedLocations extends Fragment {
 		addLocationButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Intent intent = new Intent(v.getContext(), AppList.class);
+				startActivity(intent);
 				TextView locationName = (TextView)view.findViewById(R.id.location_name);
 				if (!locationName.getText().toString().equals("")) {
 					Location tmplocation = new Location();
