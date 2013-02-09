@@ -1,27 +1,25 @@
-package tb14.walkbasehackathon.Adapters;
-
+package tb14.walkbasehackathon.Adapter;
 
 import java.util.List;
 
 import tb14.walkbasehackathon.R;
 import tb14.walkbasehackathon.DTO.Location;
+import tb14.walkbasehackathon.DTO.Task;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-public class LocationAdapter extends ArrayAdapter<Location> {
-	
+public class TaskAdapter extends ArrayAdapter<Task> {
+
 	Context context;
     int layoutResourceId;   
-    List<Location> data = null;
+    List<Task> data = null;
    
-    public LocationAdapter(Context context, int layoutResourceId,List<Location> data) {
+    public TaskAdapter(Context context, int layoutResourceId, List<Task> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -31,36 +29,34 @@ public class LocationAdapter extends ArrayAdapter<Location> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        LocationHolder holder = null;
+        TaskHolder holder = null;
        
         if(row == null)
         {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
            
-            holder = new LocationHolder();
-            holder.deleteButton = (Button)row.findViewById(R.id.delete);
-            holder.locationName = (TextView)row.findViewById(R.id.name);
+            holder = new TaskHolder();
+            holder.location = (TextView)row.findViewById(R.id.location);
+            holder.task = (TextView)row.findViewById(R.id.task);
            
             row.setTag(holder);
         }
         else
         {
-            holder = (LocationHolder)row.getTag();
+            holder = (TaskHolder)row.getTag();
         }
        
-        Location location = data.get(position);
-        holder.deleteButton.setText(R.string.delete_location);
-        holder.locationName.setText(location.getName());
+        Task task = data.get(position);
+        holder.task.setText(task.getTask());
+        holder.location.setText(task.getLocation().getName());
+       
         return row;
     }
-    
-    
    
-    static class LocationHolder
+    static class TaskHolder
     {
-        Button deleteButton;
-        TextView locationName;
+        TextView location;
+        TextView task;
     }
-
 }

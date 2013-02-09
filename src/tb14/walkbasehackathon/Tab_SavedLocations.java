@@ -34,6 +34,8 @@ public class Tab_SavedLocations extends Fragment {
 		List<Location> values = locationDAO.getAllLocations();
 
 		list = (ListView) view.findViewById(R.id.list);
+		
+		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -41,8 +43,10 @@ public class Tab_SavedLocations extends Fragment {
 				Log.v(TAG, "item "+position+" clicked");
 			}
 		});
+		
+		
 		ArrayAdapter<Location> adapter = new LocationAdapter(view.getContext(),
-				R.layout.auctionrow, values);
+				R.layout.locationrow, values);
 		list.setAdapter(adapter);
 
 		// Inflate the layout for this fragment
