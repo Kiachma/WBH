@@ -6,8 +6,10 @@ import java.util.List;
 import tb14.walkbasehackathon.Adapter.LocationAdapter;
 import tb14.walkbasehackathon.DAOs.LocationDAO;
 import tb14.walkbasehackathon.DTO.Location;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -40,24 +43,42 @@ public class Tab_SavedLocations extends Fragment {
 		final List<Location> values = locationDAO.getAllLocations();
 
 		list = (ListView) view.findViewById(R.id.list);
+		final ArrayAdapter<Location> adapter = new LocationAdapter(view.getContext(),
+				R.layout.locationrow, values);
+		list.setAdapter(adapter);
+		
+		
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+					final int position, long id) {
 				// When clicked, show a toast with the TextView text
 				Log.v(TAG, "item "+position+" clicked");
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+				builder.setMessage("WAAAAAH").setTitle("Weh?");
+				builder.setPositiveButton("HOKAY", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Log.v(TAG, "DELETE EVERYTHING!");
+					    Location location = (Location) adapter.getItem(position);
+					    locationDAO.deleteLocation(location);
+					    adapter.remove(location);
+					}
+				});
+				builder.setNegativeButton("NO, I CLEAN!", null);
+
+				
+				AlertDialog dialog = builder.create();
+				dialog.show();
 			}
 		});
 		
-		ArrayAdapter<Location> adapter = new LocationAdapter(view.getContext(),
-				R.layout.locationrow, values);
-		list.setAdapter(adapter);
+		
 		
 		Button addLocationButton = (Button)view.findViewById(R.id.addLocationButton);
 		addLocationButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ArrayAdapter<Location> adapter = new LocationAdapter(view.getContext(),
-						R.layout.locationrow, values);
 				TextView locationName = (TextView)view.findViewById(R.id.location_name);
 				if (!locationName.getText().toString().equals("")) {
 					Location tmplocation = new Location();
@@ -68,6 +89,7 @@ public class Tab_SavedLocations extends Fragment {
 					tmplocation.setAccuracy( (double) prefs.getLong("accuracy", 0));
 					Location location = locationDAO.createLocation(tmplocation);
 					adapter.add(location);
+					adapter.notifyDataSetChanged();
 				} else {
 					Toast.makeText(v.getContext(), "Specify a name for the location", 2000).show();
 					
