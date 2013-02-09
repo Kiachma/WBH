@@ -70,10 +70,12 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 		List<Task> tasks = dao.getAllTask();
 		Log.v(TAG,"Begin Loop");
 		for (Task task : tasks) {
-			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude())));
-			if (task.getLocation() != null && 1 > getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(),wbLocation.getLatitude(), wbLocation.getLongitude())&& !prefs.getString("previousLocation", "").equals(task.getTask())) {
+			double distance = getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude());
+			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(distance));
+			if (task.getLocation() != null && range > distance && prefs.getString("previousLocation", "")!=task.getTask()) {
 				PackageManager pm = context.getPackageManager();
 				editor.putString("previousLocation", task.getTask());
+				editor.commit();
 				
 				locationNotFound=false;
 				Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
@@ -91,12 +93,12 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 			editor.putFloat("longitude", (float) wbLocation.getLongitude());
 			editor.putLong("accuracy", (long) wbLocation.getAccuracy());
 			editor.putLong("timestamp", (long) wbLocation.getTimestamp());
-			
+			editor.commit();
 		}
 		if(locationNotFound){
 			editor.putString("previousLocation", "");
+			editor.commit();
 		}
-		editor.commit();
 		wl.release();
 	}
 
