@@ -23,8 +23,8 @@ public class Tab_Info extends Fragment {
     	setAlarmButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				Alarm alarm = new Alarm();
-				alarm.setAlarm(arg0.getContext());
+				LocationUpdater locationUpdater = new LocationUpdater();
+				locationUpdater.setAlarm(arg0.getContext());
 				
 			}
 		});
@@ -32,8 +32,8 @@ public class Tab_Info extends Fragment {
     	removeAlarmButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-//				Alarm alarm = new Alarm();
-//				alarm.removeAlarm(view.getContext());
+				LocationUpdater locationUpdater = new LocationUpdater();
+				locationUpdater.cancelAlarm(view.getContext());
 			}
 		});
     	
