@@ -65,6 +65,10 @@ public class MainActivity extends Activity implements WBLocationListener{
 		actionbar.addTab(InfoTab);
 		actionbar.addTab(SavedLocationsTab);
 		actionbar.addTab(MagicTab);
+		
+		Alarm alarm = new Alarm();
+		alarm.setAlarm(this);
+		
 
 
 
