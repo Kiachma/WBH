@@ -87,9 +87,8 @@ public class Tab_Magic extends Fragment {
 					final int position, long id) {
 				switch(position){
 					case 0 : initializeTaskSpinner(view, packages);break;
-					case 1 : break;
-					case 2 : break;
-					case 3 : break;					
+					case 1 : initalizeMusicSpinner;break;
+								
 				}
 				
 				

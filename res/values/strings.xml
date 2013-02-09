@@ -17,8 +17,8 @@
     <string-array name="type_array">
         <item>Launch application</item>
         <item>Play music</item>
-        <item>WOL</item>
-        <item>Send SMS</item>
+<!--         <item>WOL</item> -->
+<!--         <item>Send SMS</item> -->
 
 
     </string-array>
