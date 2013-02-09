@@ -4,16 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-	<LinearLayout
-	    android:id="@+id/group"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" >
-     
-     <EditText android:id="@+id/task_name"
-        android:layout_weight="1"
-        android:layout_width="fill_parent" 
+    <Spinner
+        android:id="@+id/locationSpinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/task_name" />
+        android:drawSelectorOnTop="true"
+        android:prompt="@string/select" >
+    </Spinner>
+     <Spinner
+        android:id="@+id/taskSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:prompt="@string/select" >
+    </Spinner>
 
     <Button
         android:id="@+id/add_task"
@@ -21,11 +25,12 @@
         android:layout_height="wrap_content"
         android:onClick="onClick"
         android:text="@string/add_new_task" />
-	</LinearLayout>
+
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello" />
+        android:text="Hello" >
+    </ListView>
 
 </LinearLayout>
