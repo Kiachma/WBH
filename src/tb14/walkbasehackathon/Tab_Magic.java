@@ -1,7 +1,9 @@
 package tb14.walkbasehackathon;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import tb14.walkbasehackathon.Adapter.LocationSpinnerAdapter;
 import tb14.walkbasehackathon.Adapter.TaskAdapter;
 import tb14.walkbasehackathon.DAOs.LocationDAO;
 import tb14.walkbasehackathon.DTO.Location;
@@ -16,10 +18,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 public class Tab_Magic extends Fragment {
 	private LocationDAO locationDAO;
 	private ListView list;
+	Spinner locationSpinner;
 	private final String TAG = "MAGIX";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,25 +33,38 @@ public class Tab_Magic extends Fragment {
     	
     	locationDAO = new LocationDAO(view.getContext());
 		locationDAO.open();
-		List<Task> values = locationDAO.getAllTask();
+		List<Task> tasks = locationDAO.getAllTask();
+		List<Location> locations = locationDAO.getAllLocations();
+		
+		initializeLocationSpinner(view,locations);
+//		initializeTaskSpinner();
+		initializeListView(view,tasks);
+		
+        // Inflate the layout for this fragment
+        return view;
+    }
 
+	private void initializeLocationSpinner(View view, List<Location> locations) {
+		locationSpinner = (Spinner)view.findViewById(R.id.locationSpinner);
+		locationSpinner.setAdapter(new LocationSpinnerAdapter(view.getContext(), R.layout.locationspinner, locations));
+		
+	}
+
+	private void initializeListView(View view, List<Task> values) {
 		list = (ListView) view.findViewById(R.id.list);
-		
-		
+
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// When clicked, show a toast with the TextView text
-				Log.v(TAG, "item "+position+" clicked");
+				Log.v(TAG, "item " + position + " clicked");
 			}
 		});
-		
-		
+
 		ArrayAdapter<Task> adapter = new TaskAdapter(view.getContext(),
 				R.layout.taskrow, values);
 		list.setAdapter(adapter);
-        // Inflate the layout for this fragment
-        return view;
-    }
+
+	}
  
 }
