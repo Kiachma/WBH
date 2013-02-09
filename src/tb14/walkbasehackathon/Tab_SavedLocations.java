@@ -6,6 +6,7 @@ import java.util.List;
 import tb14.walkbasehackathon.Adapter.LocationAdapter;
 import tb14.walkbasehackathon.DAOs.LocationDAO;
 import tb14.walkbasehackathon.DTO.Location;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,6 +46,21 @@ public class Tab_SavedLocations extends Fragment {
 					int position, long id) {
 				// When clicked, show a toast with the TextView text
 				Log.v(TAG, "item "+position+" clicked");
+				
+		        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		        builder.setMessage("YO!")
+		               .setPositiveButton(R.string.fire, new DialogInterface.OnClickListener() {
+		                   public void onClick(DialogInterface dialog, int id) {
+		                       // FIRE ZE MISSILES!
+		                   }
+		               })
+		               .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+		                   public void onClick(DialogInterface dialog, int id) {
+		                       // User cancelled the dialog
+		                   }
+		               });
+				
+				
 			}
 		});
 		

@@ -10,6 +10,7 @@
     <string name="delete_location">Delete location</string>
     <string name="add_new_task">Add Task</string>
     <string name="task_name">Task name</string>
+    <string name="delete_string">Delete</string>
     
 
 </resources>
