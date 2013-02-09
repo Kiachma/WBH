@@ -6,6 +6,7 @@ import java.util.List;
 import tb14.walkbasehackathon.Adapter.LocationAdapter;
 import tb14.walkbasehackathon.DAOs.LocationDAO;
 import tb14.walkbasehackathon.DTO.Location;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,6 +46,8 @@ public class Tab_SavedLocations extends Fragment {
 					int position, long id) {
 				// When clicked, show a toast with the TextView text
 				Log.v(TAG, "item "+position+" clicked");
+				
+//				AlertDialog.Builder builder = new AlertDialog.Builder();
 			}
 		});
 		
@@ -68,6 +71,7 @@ public class Tab_SavedLocations extends Fragment {
 					tmplocation.setAccuracy( (double) prefs.getLong("accuracy", 0));
 					Location location = locationDAO.createLocation(tmplocation);
 					adapter.add(location);
+					adapter.notifyDataSetChanged();
 				} else {
 					Toast.makeText(v.getContext(), "Specify a name for the location", 2000).show();
 					
