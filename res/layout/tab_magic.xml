@@ -4,20 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Spinner
-        android:id="@+id/locationSpinner"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:prompt="@string/select" >
-    </Spinner>
-     <Spinner
-        android:id="@+id/taskSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:prompt="@string/select" >
-    </Spinner>
+        android:layout_height="wrap_content" >
+
+        <Spinner
+            android:id="@+id/locationSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="true"
+            android:prompt="@string/select" />
+
+        <Spinner
+            android:id="@+id/taskSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="true"
+            android:prompt="@string/select" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/add_task"
