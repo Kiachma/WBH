@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.os.PowerManager;
 import android.util.Log;
 
@@ -22,17 +23,18 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 
 	final public static String TAG = "WBH BG Update";
 	final static long INTERVAL = 10000;
-
+	final static int range =2;
 	private WBLocationManager locationmanager;
 	private SharedPreferences prefs;
 	private Editor editor;
 	private PowerManager.WakeLock wl;
 	private LocationDAO dao;
+	private Context context;
 	@Override
 	public void onReceive(Context context, Intent arg1) {
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "YOUR TAG");
-		
+		this.context=context;
 		locationmanager = WBLocationManager.getWBLocationManager();
 		locationmanager.setApiKey("9ew2ucuohe67381nbwbfbw9sbb9");
 		locationmanager.setWBLocationListener(this);
@@ -64,14 +66,21 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 	
 	@Override
 	public void lastKnownLocationWasRetrieved(WBLocation wbLocation) {
-		List<Task> tasks = dao.getAllTask(); 
-		for (Task task : tasks){
-			Log.v(TAG,task.getLocation().getName()+" : "+String.valueOf(getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), 
-					wbLocation.getLatitude(), wbLocation.getLongitude())));
-	
-			if(task.getLocation()!=null&& 10>getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), 
-					wbLocation.getLatitude(), wbLocation.getLongitude())) {
+		boolean locationNotFound=true;
+		List<Task> tasks = dao.getAllTask();
+		for (Task task : tasks) {
+			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude())));
+			if (task.getLocation() != null && 1 > getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(),wbLocation.getLatitude(), wbLocation.getLongitude())&& !prefs.getString("previousLocation", "").equals(task.getTask())) {
+				PackageManager pm = context.getPackageManager();
+				editor.putString("previousLocation", task.getTask());
 				
+				locationNotFound=false;
+				Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
+				if (null != appStartIntent) {
+					context.startActivity(appStartIntent);
+
+				}
+
 			}
 			
 		}
@@ -80,9 +89,13 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 			editor.putFloat("longitude", (float) wbLocation.getLongitude());
 			editor.putLong("accuracy", (long) wbLocation.getAccuracy());
 			editor.putLong("timestamp", (long) wbLocation.getTimestamp());
-			editor.commit();
+			
 		}
-		wl.release();	
+		if(locationNotFound){
+			editor.putString("previousLocation", "");
+		}
+		editor.commit();
+		wl.release();
 	}
 
 	
