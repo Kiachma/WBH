@@ -88,8 +88,6 @@ public class Tab_SavedLocations extends Fragment {
 		addLocationButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), AppList.class);
-				startActivity(intent);
 				TextView locationName = (TextView)view.findViewById(R.id.location_name);
 				if (!locationName.getText().toString().equals("")) {
 					Location tmplocation = new Location();
