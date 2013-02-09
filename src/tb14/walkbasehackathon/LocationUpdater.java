@@ -17,7 +17,7 @@ import com.walkbase.location.listeners.WBLocationListener;
 public class LocationUpdater extends BroadcastReceiver implements WBLocationListener  {
 
 	final public static String TAG = "WBH BG Update";
-	final static long INTERVAL = 5000;
+	final static long INTERVAL = 10000;
 
 	private WBLocationManager locationmanager;
 	private SharedPreferences prefs;
