@@ -9,7 +9,9 @@ import tb14.walkbasehackathon.Adapter.TaskAdapter;
 import tb14.walkbasehackathon.DAOs.LocationDAO;
 import tb14.walkbasehackathon.DTO.Location;
 import tb14.walkbasehackathon.DTO.Task;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -47,11 +49,13 @@ public class Tab_Magic extends Fragment {
 		List<Location> locations = locationDAO.getAllLocations();
 		PackageManager pm=view.getContext().getPackageManager();
 		List<PackageInfo> packages = pm.getInstalledPackages(PackageManager.GET_META_DATA);
-		
+		final ArrayAdapter<Task> adapter = new TaskAdapter(view.getContext(),
+				R.layout.taskrow, tasks);
 		initializeLocationSpinner(view,locations);
 		initializeTaskSpinner(view,packages);
-		initializeListView(view,tasks);
+		initializeListView(view,tasks,adapter);
 		Button addTaskButton = (Button)view.findViewById(R.id.add_task);
+		
 		addTaskButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -62,8 +66,6 @@ public class Tab_Magic extends Fragment {
 				Task task = new Task();
 				task.setLocation((Location)locationSpinner.getSelectedItem());
 				task.setTask(((PackageInfo)taskSpinner.getSelectedItem()).packageName);
-				ArrayAdapter<Task> adapter = new TaskAdapter(view.getContext(),
-						R.layout.locationrow, tasks);
 				task = locationDAO.createTask(task);
 				adapter.add(task);
 				adapter.notifyDataSetChanged();
@@ -86,19 +88,32 @@ public class Tab_Magic extends Fragment {
 		
 	}
 
-	private void initializeListView(View view, List<Task> values) {
+	private void initializeListView(View view, List<Task> values, final ArrayAdapter<Task> adapter) {
 		list = (ListView) view.findViewById(R.id.list);
 
 		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+					final int position, long id) {
 				// When clicked, show a toast with the TextView text
-				Log.v(TAG, "item " + position + " clicked");
+				AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+				builder.setMessage("WAAAAAH").setTitle("Weh?");
+				builder.setPositiveButton("HOKAY", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Log.v(TAG, "DELETE EVERYTHING!");
+					    Task task = (Task) adapter.getItem(position);
+					    locationDAO.deleteTask(task);
+					    adapter.remove(task);
+					}
+				});
+				builder.setNegativeButton("NO, I CLEAN!", null);
+
+				
+				AlertDialog dialog = builder.create();
+				dialog.show();
 			}
 		});
 
-		ArrayAdapter<Task> adapter = new TaskAdapter(view.getContext(),
-				R.layout.taskrow, values);
 		list.setAdapter(adapter);
 
 	}
