@@ -4,21 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-
-    <Button
-        android:id="@+id/last_location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:onClick="getLastKnownLocation"
-        android:text="Button" />
-    </LinearLayout>
 	<LinearLayout
         android:id="@+id/group"
         android:layout_width="wrap_content"

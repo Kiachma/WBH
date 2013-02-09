@@ -74,50 +74,7 @@ public class MainActivity extends Activity implements WBLocationListener{
 
 	}
 
-	//@Override
-	//protected void onResume() {
-	//	locationDAO.open();
-	//	super.onResume();
-	//}
 
-	//@Override
-	//protected void onPause() {
-	//	locationDAO.close();
-	//	super.onPause();
-	//}
-
-	public void onClick(View v) {
-		//	@SuppressWarnings("unchecked")
-		//	ArrayAdapter<Location> adapter = (ArrayAdapter<Location>) getListAdapter();
-		//	Location location=null;
-		//	switch (v.getId()) {
-		//	case R.id.last_location_button:
-		//		getLastKnownLocation(v);
-		//		break;
-		//
-		//	case R.id.add:
-		//		locationmanager.fetchLastKnownUserLocation(v.getContext());
-		//		// Save the new comment to the database
-		//		if(latestLocation.getLatitude()!=null){
-		//			latestLocation.setName("test"
-		//					+ String.valueOf(new Random().nextInt(100000)));
-		//			location = locationDAO.createLocation(latestLocation);
-		//			adapter.add(location);
-		//		}
-		//		break;
-		//	case R.id.delete:
-		//		if (getListAdapter().getCount() > 0) {
-		//			location = (Location) getListAdapter().getItem(0);
-		//			locationDAO.deleteLocation(location);
-		//			adapter.remove(location);
-		//		}
-		//	default:
-		//		break;
-		//	}
-		//	adapter.notifyDataSetChanged();
-
-
-	}
 
 	public void getLastKnownLocation(View v) {
 		locationmanager.fetchLastKnownUserLocation(v.getContext());
@@ -146,7 +103,6 @@ public class MainActivity extends Activity implements WBLocationListener{
 		Date date = latestLocation.getTimestamp();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyy HH:mm:ss",Locale.getDefault());
 		msg.obj = Double.toString(distance)+" "+dateFormat.format(date);
-		mHandler.sendMessage(msg);
 
 		// TODO Auto-generated method stub
 	}
@@ -161,15 +117,6 @@ public class MainActivity extends Activity implements WBLocationListener{
 
 	}
 
-	Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			String texten = (String) msg.obj;
-			// call setText here
-			//		TextView text = (TextView) findViewById(R.id.textView1);
-			//		text.setText(texten);
-		}
-	};
 
 	@Override
 	public void errorFetchingLastKnownLocation(String arg0, int arg1) {
