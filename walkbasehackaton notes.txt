@@ -1,0 +1,71 @@
+
+---------------------------------------------------------
+
+Execute code
+
+INputStream stream = Runtime.getRuntime()exec("code code code");
+BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+temp = in.readLine();
+
+--------------------------------------------------------------------------
+Wake on lan:
+http://www.jibble.org/wake-on-lan/WakeOnLan.java
+
+
+-----------------------------------------------------------
+Reading / writing files
+
+Bash is executed  in \
+The bashscript will be saved in \sdcard\WalkbaseHackaton\
+
+SAVE FILES WITH http://developer.android.com/guide/topics/data/data-storage.html#filesInternal
+String FILENAME = "hello_file";
+String string = "hello world!";
+
+FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+fos.write(string.getBytes());
+fos.close();
+
+
+
+------------------------------
+Get list of android applications
+
+
+		        List<ApplicationInfo> packages = pm
+			                .getInstalledApplications(PackageManager.GET_META_DATA);
+
+			        for (ApplicationInfo packageInfo : packages) {
+
+			            Log.d(TAG, "Installed package :" + packageInfo.packageName);
+}
+
+--------------------------------
+Launch other android application
+
+			PackageManager pm = this.getPackageManager();
+			Intent appStartIntent = pm.getLaunchIntentForPackage(String package_name);
+			if (null != appStartIntent)
+			{
+			    this.startActivity(appStartIntent);
+			}
+
+
+
+--------------------------------
+Display notification
+
+
+displayNotificationMessage("Sstarting Background Service");
+
+
+	private void displayNotificationMessage(String message) {
+		NotificationManager notificationMgr = (NotificationManager)this.getSystemService(this.NOTIFICATION_SERVICE);
+        Notification noti = new Notification.Builder(this)
+        .setContentTitle("WHBackgroundservice")
+        .setContentText(message)
+        .setSmallIcon(R.drawable.ic_launcher)
+        .build();
+        notificationMgr.notify(R.drawable.ic_launcher, noti);        
+		
+	}
