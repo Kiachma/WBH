@@ -63,8 +63,8 @@ public class Tab_SavedLocations extends Fragment {
 					Location tmplocation = new Location();
 					tmplocation.setName( locationName.getText().toString());
 					tmplocation.setTimestamp(new Date(prefs.getLong("timestamp", 0)));
-					tmplocation.setLatitude( (double) prefs.getLong("latitude", 0));
-					tmplocation.setLongitude( (double) prefs.getLong("longitude", 0));
+					tmplocation.setLatitude( (double) prefs.getFloat("latitude", 0));
+					tmplocation.setLongitude( (double) prefs.getFloat("longitude", 0));
 					tmplocation.setAccuracy( (double) prefs.getLong("accuracy", 0));
 					Location location = locationDAO.createLocation(tmplocation);
 					adapter.add(location);

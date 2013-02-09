@@ -66,6 +66,7 @@ public class Tab_Magic extends Fragment {
 						R.layout.locationrow, tasks);
 				task = locationDAO.createTask(task);
 				adapter.add(task);
+				adapter.notifyDataSetChanged();
 			}
 		});
 		
