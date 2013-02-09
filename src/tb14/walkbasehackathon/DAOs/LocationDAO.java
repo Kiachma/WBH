@@ -112,7 +112,7 @@ public class LocationDAO {
 		long insertId = database
 				.insert(MySQLiteHelper.TABLE_TASK, null, values);
 		Cursor cursor = database.query(MySQLiteHelper.TABLE_TASK,
-				allLocationColumns,
+				allTaskColumns,
 				MySQLiteHelper.COLUMN_ID + " = " + insertId, null, null, null,
 				null);
 		cursor.moveToFirst();

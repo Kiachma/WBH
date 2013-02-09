@@ -11,6 +11,13 @@
         android:drawSelectorOnTop="true"
         android:prompt="@string/select" >
     </Spinner>
+     <Spinner
+        android:id="@+id/taskSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:prompt="@string/select" >
+    </Spinner>
 
     <Button
         android:id="@+id/add_task"

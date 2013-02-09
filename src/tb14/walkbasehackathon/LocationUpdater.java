@@ -1,5 +1,9 @@
 package tb14.walkbasehackathon;
 
+import java.util.List;
+
+import tb14.walkbasehackathon.DAOs.LocationDAO;
+import tb14.walkbasehackathon.DTO.Task;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -23,6 +27,7 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 	private SharedPreferences prefs;
 	private Editor editor;
 	private PowerManager.WakeLock wl;
+	private LocationDAO dao;
 	@Override
 	public void onReceive(Context context, Intent arg1) {
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -31,7 +36,8 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 		locationmanager = WBLocationManager.getWBLocationManager();
 		locationmanager.setApiKey("9ew2ucuohe67381nbwbfbw9sbb9");
 		locationmanager.setWBLocationListener(this);
-		
+		dao = new LocationDAO(context);
+		dao.open();
 		 prefs = (SharedPreferences) context.getSharedPreferences("WBHPrefs", Context.MODE_PRIVATE);
 		 editor = prefs.edit();
 		
@@ -57,18 +63,30 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 
 	
 	@Override
-	public void lastKnownLocationWasRetrieved(WBLocation arg0) {
-		if (prefs.getLong("timestamp", 1) != arg0.getTimestamp()) {
-			editor.putLong("latitude", (long) arg0.getLatitude());
-			editor.putLong("longitude", (long) arg0.getLongitude());
-			editor.putLong("accuracy", (long) arg0.getAccuracy());
-			editor.putLong("timestamp", (long) arg0.getTimestamp());
+	public void lastKnownLocationWasRetrieved(WBLocation wbLocation) {
+		List<Task> tasks = dao.getAllTask(); 
+		for (Task task : tasks){
+			Log.v(TAG,task.getLocation().getName()+" : "+String.valueOf(getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), 
+					wbLocation.getLatitude(), wbLocation.getLongitude())));
+	
+			if(task.getLocation()!=null&& 10>getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), 
+					wbLocation.getLatitude(), wbLocation.getLongitude())) {
+				
+			}
+			
+		}
+		if (prefs.getLong("timestamp", 1) != wbLocation.getTimestamp()) {
+			editor.putFloat("latitude", (float) wbLocation.getLatitude());
+			editor.putFloat("longitude", (float) wbLocation.getLongitude());
+			editor.putLong("accuracy", (long) wbLocation.getAccuracy());
+			editor.putLong("timestamp", (long) wbLocation.getTimestamp());
 			editor.commit();
 		}
 		wl.release();	
 	}
+
 	
-	private double gps2m(double lat_a, double lng_a, double lat_b, double lng_b) {
+	private double getDistance(double lat_a, double lng_a, double lat_b, double lng_b) {
 		double pk = (180 / 3.14169);
 
 		double a1 = lat_a / pk;
