@@ -67,7 +67,8 @@ public class MainActivity extends Activity implements WBLocationListener{
 		actionbar.addTab(MagicTab);
 		
 		
-
+		LocationUpdater locationupdater = new LocationUpdater();
+		locationupdater.setAlarm(this);
 
 
 	}
