@@ -68,6 +68,7 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 	public void lastKnownLocationWasRetrieved(WBLocation wbLocation) {
 		boolean locationNotFound=true;
 		List<Task> tasks = dao.getAllTask();
+		Log.v(TAG,"Begin Loop");
 		for (Task task : tasks) {
 			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude())));
 			if (task.getLocation() != null && 1 > getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(),wbLocation.getLatitude(), wbLocation.getLongitude())&& !prefs.getString("previousLocation", "").equals(task.getTask())) {
@@ -84,6 +85,7 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 			}
 			
 		}
+		Log.v(TAG,"End Loop");
 		if (prefs.getLong("timestamp", 1) != wbLocation.getTimestamp()) {
 			editor.putFloat("latitude", (float) wbLocation.getLatitude());
 			editor.putFloat("longitude", (float) wbLocation.getLongitude());

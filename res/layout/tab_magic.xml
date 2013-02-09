@@ -17,6 +17,14 @@
             android:prompt="@string/select" />
 
         <Spinner
+            android:id="@+id/type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="true"
+            android:prompt="@string/select" />
+
+        <Spinner
             android:id="@+id/taskSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

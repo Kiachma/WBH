@@ -35,6 +35,8 @@ public class Tab_Magic extends Fragment {
 	private ListView list;
 	private Spinner locationSpinner;
 	private Spinner taskSpinner;
+	List<Location> locations;
+	List<PackageInfo> packages;
 	private final String TAG = "MAGIX";
 	List<Task> tasks;
     @Override
@@ -46,14 +48,16 @@ public class Tab_Magic extends Fragment {
     	locationDAO = new LocationDAO(view.getContext());
 		locationDAO.open();
 		tasks = locationDAO.getAllTask();
-		List<Location> locations = locationDAO.getAllLocations();
+		
 		PackageManager pm=view.getContext().getPackageManager();
-		List<PackageInfo> packages = pm.getInstalledPackages(PackageManager.GET_META_DATA);
+		locations = locationDAO.getAllLocations();
+		packages = pm.getInstalledPackages(PackageManager.GET_META_DATA);
 		final ArrayAdapter<Task> adapter = new TaskAdapter(view.getContext(),
 				R.layout.taskrow, tasks);
-		initializeLocationSpinner(view,locations);
-		initializeTaskSpinner(view,packages);
-		initializeListView(view,tasks,adapter);
+		initializeLocationSpinner(view);
+		initializeTaskTypeSpinner(view);
+		//initializeTaskSpinner(view);
+		initializeListView(view,adapter);
 		Button addTaskButton = (Button)view.findViewById(R.id.add_task);
 		
 		addTaskButton.setOnClickListener(new OnClickListener() {
@@ -76,19 +80,44 @@ public class Tab_Magic extends Fragment {
         return view;
     }
 
+	private void initializeTaskTypeSpinner(View view) {
+		Spinner spinner = (Spinner) view.findViewById(R.id.type);
+		list.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					final int position, long id) {
+				switch(position){
+					case 0 : initializeTaskSpinner(view, packages);break;
+					case 1 : break;
+					case 2 : break;
+					case 3 : break;					
+				}
+				
+				
+			}
+		});
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
+		        R.array.type_array, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		spinner.setAdapter(adapter);
+		
+	}
+
 	private void initializeTaskSpinner(View view, List<PackageInfo> packages) {
 		taskSpinner = (Spinner)view.findViewById(R.id.taskSpinner);
 		ArrayAdapter<PackageInfo> adapter = new ArrayAdapter<PackageInfo>(view.getContext(), android.R.layout.simple_spinner_item, packages);
 		taskSpinner.setAdapter(adapter);
 	}
 
-	private void initializeLocationSpinner(View view, List<Location> locations) {
+	private void initializeLocationSpinner(View view) {
 		locationSpinner = (Spinner)view.findViewById(R.id.locationSpinner);
 		locationSpinner.setAdapter(new LocationSpinnerAdapter(view.getContext(), R.layout.locationspinner, locations));
 		
 	}
 
-	private void initializeListView(View view, List<Task> values, final ArrayAdapter<Task> adapter) {
+	private void initializeListView(View view, final ArrayAdapter<Task> adapter) {
 		list = (ListView) view.findViewById(R.id.list);
 
 		list.setOnItemClickListener(new OnItemClickListener() {
