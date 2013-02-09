@@ -69,3 +69,23 @@ displayNotificationMessage("Sstarting Background Service");
         notificationMgr.notify(R.drawable.ic_launcher, noti);        
 		
 	}
+	
+	
+	
+-------------------------------
+Send SMS
+
+Manifest:
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    
+COde:
+			public void onClick(View arg0) {
+				String number = "0505446634";
+				String message = "test";
+		        SmsManager sms = SmsManager.getDefault();
+		        PendingIntent pi = PendingIntent.getActivity(arg0.getContext(), 0, new Intent(), 0); 
+		        sms.sendTextMessage(number, null, message, pi, null);     
+			} 
+		        
+Read from text field:
+String message = editText.getText().toString();
