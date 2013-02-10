@@ -84,9 +84,8 @@ public class Tab_Magic extends Fragment {
 				task.setLocation((Location)locationSpinner.getSelectedItem());
 				switch((int)typeSpinner.getSelectedItemId()){
 					case 0:task.setTask(((PackageInfo)taskSpinner.getSelectedItem()).packageName);break;
-
-					case 2:task.setTask(editNumber.getText().toString() + "/" + editMessage.getText().toString());
-					case 1:	task.setTask(uri);
+					case 1:	task.setTask(uri);break;
+					case 2:task.setTask(editNumber.getText().toString() + "/" + editMessage.getText().toString());break;
 
 				}
 				task = locationDAO.createTask(task);
