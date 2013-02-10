@@ -17,11 +17,14 @@
     <string-array name="type_array">
         <item>Launch application</item>
         <item>Play music</item>
+        <item>Send SMS</item>
 <!--         <item>WOL</item> -->
 <!--         <item>Send SMS</item> -->
 
 
     </string-array>
+        <string name="phone_number">Phone number</string>
+        <string name="text_message">Message</string>
     
 
 </resources>

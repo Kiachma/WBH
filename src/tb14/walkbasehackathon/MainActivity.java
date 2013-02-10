@@ -33,8 +33,6 @@ public class MainActivity extends Activity implements WBLocationListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
 		mediaPlayer = MediaPlayer.create(getApplicationContext(),
 				R.raw.imperial);
 		locationmanager = WBLocationManager.getWBLocationManager();

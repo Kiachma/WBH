@@ -15,6 +15,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.walkbase.location.WBLocation;
@@ -32,8 +33,10 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 	private PowerManager.WakeLock wl;
 	private LocationDAO dao;
 	private Context context;
+	SmsManager sms = SmsManager.getDefault();
 	@Override
 	public void onReceive(Context context, Intent arg1) {
+		
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "YOUR TAG");
 		this.context=context;
@@ -71,14 +74,18 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 		boolean locationNotFound=true;
 		List<Task> tasks = dao.getAllTask();
 		Log.v(TAG,"Begin Loop");
+		String previous = prefs.getString("previousLocation", "");
 		for (Task task : tasks) {
 			double distance = getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude());
 			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(distance));
-			if (task.getLocation() != null && range > distance && !prefs.getString("previousLocation", "").equals(task.getTask())) {
+
+			if (range > distance) {
 				locationNotFound=false;
-				editor.putString("previousLocation", task.getTask());
-				editor.commit();
-				switch(task.getType()){
+				if (task.getLocation() != null  && !previous.equals(task.getTask())) {
+
+					editor.putString("previousLocation", task.getTask());
+					editor.commit();
+					switch(task.getType()){
 					case 0 :
 						PackageManager pm = context.getPackageManager();
 						Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
@@ -102,9 +109,14 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 						}
 						break;
 					case 2:
+						String[] temp = task.getTask().split("/");
+						String number = temp[0];
+						String message = temp[1];
+				        PendingIntent pi = PendingIntent.getActivity(context, 0, new Intent(), 0); 
+				        sms.sendTextMessage(number, null, message, pi, null);  
 						break;
-					case 3:
-						break;
+					}
+
 				}
 			}
 		}
