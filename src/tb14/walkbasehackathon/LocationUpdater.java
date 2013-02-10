@@ -71,14 +71,17 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 		boolean locationNotFound=true;
 		List<Task> tasks = dao.getAllTask();
 		Log.v(TAG,"Begin Loop");
+		String previous = prefs.getString("previousLocation", "");
 		for (Task task : tasks) {
 			double distance = getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude());
 			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(distance));
-			if (task.getLocation() != null && range > distance && prefs.getString("previousLocation", "")!=task.getTask()) {
+			if (range > distance) {
 				locationNotFound=false;
-				editor.putString("previousLocation", task.getTask());
-				editor.commit();
-				switch(task.getType()){
+				if (task.getLocation() != null  && !previous.equals(task.getTask())) {
+
+					editor.putString("previousLocation", task.getTask());
+					editor.commit();
+					switch(task.getType()){
 					case 0 :
 						PackageManager pm = context.getPackageManager();
 						Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
@@ -105,6 +108,7 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 						break;
 					case 3:
 						break;
+					}
 				}
 			}
 		}
