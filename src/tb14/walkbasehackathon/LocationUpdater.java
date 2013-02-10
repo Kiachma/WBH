@@ -15,6 +15,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.PowerManager;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.walkbase.location.WBLocation;
@@ -32,8 +33,10 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 	private PowerManager.WakeLock wl;
 	private LocationDAO dao;
 	private Context context;
+	SmsManager sms = SmsManager.getDefault();
 	@Override
 	public void onReceive(Context context, Intent arg1) {
+		
 		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "YOUR TAG");
 		this.context=context;
@@ -108,12 +111,12 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 						}
 						break;
 					case 2:
+						String[] temp = task.getTask().split("/");
+						String number = temp[0];
+						String message = temp[1];
+				        PendingIntent pi = PendingIntent.getActivity(context, 0, new Intent(), 0); 
+				        sms.sendTextMessage(number, null, message, pi, null);  
 						break;
-					case 3:
-						break;
-						
-					
-						
 						
 				}
 				

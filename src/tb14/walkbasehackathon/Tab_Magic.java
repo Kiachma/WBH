@@ -21,11 +21,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -55,6 +57,8 @@ public class Tab_Magic extends Fragment {
 		initializeTaskTypeSpinner(view);
 		//initializeTaskSpinner(view);
 		initializeListView(view,adapter);
+		final EditText editMessage = (EditText) view.findViewById(R.id.phone_message_text);
+		final EditText editNumber = (EditText) view.findViewById(R.id.phone_number_text);
 		Button addTaskButton = (Button)view.findViewById(R.id.add_task);
 		
 		addTaskButton.setOnClickListener(new OnClickListener() {
@@ -72,6 +76,7 @@ public class Tab_Magic extends Fragment {
 				switch((int)typeSpinner.getSelectedItemId()){
 					case 0:task.setTask(((PackageInfo)taskSpinner.getSelectedItem()).packageName);break;
 					case 1:task.setTask(((HashMap<String,String>)taskSpinner.getSelectedItem()).get("songPath"));
+					case 2:task.setTask(editNumber.getText().toString() + "/" + editMessage.getText().toString());
 				}
 				task = locationDAO.createTask(task);
 				adapter.add(task);
@@ -96,12 +101,25 @@ public class Tab_Magic extends Fragment {
 					List<PackageInfo> packages = pm
 							.getInstalledPackages(PackageManager.GET_META_DATA);
 					initializeTaskSpinner(view, packages);
+					view.findViewById(R.id.phone_message_text).setVisibility(8);
+					view.findViewById(R.id.phone_number_text).setVisibility(8);
+					view.findViewById(R.id.taskSpinner).setVisibility(0);
 					break;
 					
 				case 1:
 					SongManager songManager = new SongManager();
 					ArrayList<HashMap<String,String>> songList=songManager.getPlayList(songManager.MEDIA_PATH);
-					initializeMusicSpinner(view,songList);break;
+					initializeMusicSpinner(view,songList);
+					view.findViewById(R.id.phone_message_text).setVisibility(8);
+					view.findViewById(R.id.phone_number_text).setVisibility(8);
+					view.findViewById(R.id.taskSpinner).setVisibility(0);
+					break;
+				case 2:
+					view.findViewById(R.id.phone_message_text).setVisibility(0);
+					view.findViewById(R.id.phone_number_text).setVisibility(0);
+					view.findViewById(R.id.taskSpinner).setVisibility(8);
+					
+					
 		 }
 		} 
 		  @Override     

@@ -41,6 +41,23 @@
         android:onClick="onClick"
         android:text="@string/add_new_task" />
 
+    <EditText
+        android:id="@+id/phone_number_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="phone" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/phone_message_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine" />
+
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
