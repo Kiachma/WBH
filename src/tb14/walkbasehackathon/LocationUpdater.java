@@ -1,6 +1,5 @@
 package tb14.walkbasehackathon;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,9 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.PowerManager;
 import android.util.Log;
 
@@ -90,27 +87,30 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 							context.startActivity(appStartIntent);
 
 						}break;
-					case 1 :
-						
-						
+					case 1 :				
 						MediaPlayer mediaPlayer = new MediaPlayer();
-					try {
-						mediaPlayer.setDataSource(task.getTask());
-						mediaPlayer.prepare();
-						mediaPlayer.start();
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (SecurityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalStateException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+						try {
+							mediaPlayer.setDataSource(task.getTask());
+							mediaPlayer.prepare();
+							mediaPlayer.start();
+						} catch (IllegalArgumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SecurityException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalStateException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					case 2:
+						break;
+					case 3:
+						break;
 						
 					
 						

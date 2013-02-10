@@ -100,7 +100,7 @@ public class Tab_Magic extends Fragment {
 					
 				case 1:
 					SongManager songManager = new SongManager();
-					ArrayList<HashMap<String,String>> songList=songManager.getPlayList();
+					ArrayList<HashMap<String,String>> songList=songManager.getPlayList(songManager.MEDIA_PATH);
 					initializeMusicSpinner(view,songList);break;
 		 }
 		} 
