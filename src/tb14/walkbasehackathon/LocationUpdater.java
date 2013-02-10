@@ -76,17 +76,14 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(distance));
 			if (task.getLocation() != null && range > distance && prefs.getString("previousLocation", "")!=task.getTask()) {
 				locationNotFound=false;
+				editor.putString("previousLocation", task.getTask());
+				editor.commit();
 				switch(task.getType()){
 					case 0 :
 						PackageManager pm = context.getPackageManager();
-						editor.putString("previousLocation", task.getTask());
-						editor.commit();
-					
-						
 						Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
 						if (null != appStartIntent) {
 							context.startActivity(appStartIntent);
-
 						}break;
 					case 1 :				
 						MediaPlayer mediaPlayer = new MediaPlayer();
@@ -95,16 +92,12 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 							mediaPlayer.prepare();
 							mediaPlayer.start();
 						} catch (IllegalArgumentException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (SecurityException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (IllegalStateException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						break;
@@ -112,16 +105,8 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 						break;
 					case 3:
 						break;
-						
-					
-						
-						
 				}
-				
-				
-
 			}
-			
 		}
 		Log.v(TAG,"End Loop");
 		if (prefs.getLong("timestamp", 1) != wbLocation.getTimestamp()) {
