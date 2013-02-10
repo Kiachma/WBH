@@ -75,13 +75,14 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 			double distance = getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude());
 			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(distance));
 			if (task.getLocation() != null && range > distance && prefs.getString("previousLocation", "")!=task.getTask()) {
+				locationNotFound=false;
 				switch(task.getType()){
 					case 0 :
 						PackageManager pm = context.getPackageManager();
 						editor.putString("previousLocation", task.getTask());
 						editor.commit();
+					
 						
-						locationNotFound=false;
 						Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
 						if (null != appStartIntent) {
 							context.startActivity(appStartIntent);
