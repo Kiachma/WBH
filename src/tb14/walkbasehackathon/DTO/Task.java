@@ -5,6 +5,7 @@ public class Task {
 	private long id;
 	private Location location;
 	private String task;
+	private int type;
 
 	public long getId() {
 		return id;
@@ -29,5 +30,15 @@ public class Task {
 	public void setTask(String task) {
 		this.task = task;
 	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	
 
 }

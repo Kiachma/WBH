@@ -1,10 +1,11 @@
 package tb14.walkbasehackathon;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import tb14.walkbasehackathon.Adapter.LocationAdapter;
 import tb14.walkbasehackathon.Adapter.LocationSpinnerAdapter;
+import tb14.walkbasehackathon.Adapter.MusicSpinnerAdapter;
 import tb14.walkbasehackathon.Adapter.TaskAdapter;
 import tb14.walkbasehackathon.DAOs.LocationDAO;
 import tb14.walkbasehackathon.DTO.Location;
@@ -12,23 +13,21 @@ import tb14.walkbasehackathon.DTO.Task;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class Tab_Magic extends Fragment {
 	private LocationDAO locationDAO;
@@ -43,15 +42,13 @@ public class Tab_Magic extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	
     	final View view = inflater.inflate(R.layout.tab_magic, container, false);
-
+    	
     	
     	locationDAO = new LocationDAO(view.getContext());
 		locationDAO.open();
-		tasks = locationDAO.getAllTask();
-		
-		PackageManager pm=view.getContext().getPackageManager();
+		tasks = locationDAO.getAllTask();	
 		locations = locationDAO.getAllLocations();
-		packages = pm.getInstalledPackages(PackageManager.GET_META_DATA);
+		
 		final ArrayAdapter<Task> adapter = new TaskAdapter(view.getContext(),
 				R.layout.taskrow, tasks);
 		initializeLocationSpinner(view);
@@ -67,9 +64,15 @@ public class Tab_Magic extends Fragment {
 						.findViewById(R.id.locationSpinner);
 				Spinner taskSpinner = (Spinner) view
 						.findViewById(R.id.taskSpinner);
+				Spinner typeSpinner = (Spinner) view.findViewById(R.id.type);
+				
 				Task task = new Task();
+				task.setType((int)typeSpinner.getSelectedItemId());
 				task.setLocation((Location)locationSpinner.getSelectedItem());
-				task.setTask(((PackageInfo)taskSpinner.getSelectedItem()).packageName);
+				switch((int)typeSpinner.getSelectedItemId()){
+					case 0:task.setTask(((PackageInfo)taskSpinner.getSelectedItem()).packageName);break;
+					case 1:task.setTask(((HashMap<String,String>)taskSpinner.getSelectedItem()).get("songPath"));
+				}
 				task = locationDAO.createTask(task);
 				adapter.add(task);
 				adapter.notifyDataSetChanged();
@@ -80,20 +83,33 @@ public class Tab_Magic extends Fragment {
         return view;
     }
 
-	private void initializeTaskTypeSpinner(View view) {
+	private void initializeTaskTypeSpinner(final View view) {
 		Spinner spinner = (Spinner) view.findViewById(R.id.type);
-		list.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					final int position, long id) {
-				switch(position){
-					case 0 : initializeTaskSpinner(view, packages);break;
-					case 1 : initalizeMusicSpinner;break;
-								
-				}
-				
-				
-			}
-		});
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() 
+		{    
+		 @Override
+		 public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+
+		 switch(i){
+				case 0:
+					PackageManager pm = view.getContext().getPackageManager();
+					List<PackageInfo> packages = pm
+							.getInstalledPackages(PackageManager.GET_META_DATA);
+					initializeTaskSpinner(view, packages);
+					break;
+					
+				case 1:
+					SongManager songManager = new SongManager();
+					ArrayList<HashMap<String,String>> songList=songManager.getPlayList();
+					initializeMusicSpinner(view,songList);break;
+		 }
+		} 
+		  @Override     
+		  public void onNothingSelected(AdapterView<?> parentView) 
+		{         
+
+		 }
+		  }); 
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
 		        R.array.type_array, android.R.layout.simple_spinner_item);
@@ -101,6 +117,12 @@ public class Tab_Magic extends Fragment {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		spinner.setAdapter(adapter);
+		
+	}
+
+	protected void initializeMusicSpinner(View view, ArrayList<HashMap<String, String>> songList) {
+		taskSpinner = (Spinner)view.findViewById(R.id.taskSpinner); 
+		taskSpinner.setAdapter(new MusicSpinnerAdapter(view.getContext(), R.layout.locationspinner, songList));
 		
 	}
 
@@ -145,5 +167,8 @@ public class Tab_Magic extends Fragment {
 		list.setAdapter(adapter);
 
 	}
+
  
 }
+
+

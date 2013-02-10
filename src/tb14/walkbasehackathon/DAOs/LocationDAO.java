@@ -24,7 +24,7 @@ public class LocationDAO {
 			MySQLiteHelper.COLUMN_TIMESTAMP };
 
 	private String[] allTaskColumns = { MySQLiteHelper.COLUMN_ID,
-			MySQLiteHelper.COLUMN_LOCATION, MySQLiteHelper.COLUMN_TASK };
+			MySQLiteHelper.COLUMN_LOCATION, MySQLiteHelper.COLUMN_TASK ,MySQLiteHelper.COLUMN_TYPE};
 
 	public LocationDAO(Context context) {
 		dbHelper = new MySQLiteHelper(context);
@@ -109,6 +109,7 @@ public class LocationDAO {
 		ContentValues values = new ContentValues();
 		values.put(MySQLiteHelper.COLUMN_LOCATION, task.getLocation().getId());
 		values.put(MySQLiteHelper.COLUMN_TASK, task.getTask());
+		values.put(MySQLiteHelper.COLUMN_TYPE, task.getType());
 		long insertId = database
 				.insert(MySQLiteHelper.TABLE_TASK, null, values);
 		Cursor cursor = database.query(MySQLiteHelper.TABLE_TASK,
@@ -130,6 +131,8 @@ public class LocationDAO {
 		task.setLocation(location);
 		task.setTask(cursor.getString(cursor
 				.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_TASK)));
+		task.setType(cursor.getInt(cursor
+				.getColumnIndexOrThrow(MySQLiteHelper.COLUMN_TYPE)));
 		return task;
 	}
 

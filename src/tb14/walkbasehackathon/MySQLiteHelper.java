@@ -20,6 +20,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	public static final String TABLE_TASK = "task";
 	public static final String COLUMN_TASK = "task";
 	public static final String COLUMN_LOCATION = "location";
+	public static final String COLUMN_TYPE = "type";
 	
 	
 	
@@ -40,7 +41,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 			+ TABLE_TASK + " ( " + 
 			COLUMN_ID+ " integer primary key autoincrement , " + 
 			COLUMN_LOCATION+ " integer not null , " + 
-			COLUMN_TASK + " Text not null); ";
+			COLUMN_TASK + " Text not null , " +
+			COLUMN_TYPE + " integer not null); ";
 	
 	
 

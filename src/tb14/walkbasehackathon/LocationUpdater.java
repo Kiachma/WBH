@@ -1,5 +1,7 @@
 package tb14.walkbasehackathon;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import tb14.walkbasehackathon.DAOs.LocationDAO;
@@ -12,6 +14,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.PowerManager;
 import android.util.Log;
 
@@ -23,7 +28,7 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 
 	final public static String TAG = "WBH BG Update";
 	final static long INTERVAL = 10000;
-	final static int range =2;
+	final static int range =10;
 	private WBLocationManager locationmanager;
 	private SharedPreferences prefs;
 	private Editor editor;
@@ -73,16 +78,46 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 			double distance = getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude());
 			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(distance));
 			if (task.getLocation() != null && range > distance && prefs.getString("previousLocation", "")!=task.getTask()) {
-				PackageManager pm = context.getPackageManager();
-				editor.putString("previousLocation", task.getTask());
-				editor.commit();
-				
-				locationNotFound=false;
-				Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
-				if (null != appStartIntent) {
-					context.startActivity(appStartIntent);
+				switch(task.getType()){
+					case 0 :
+						PackageManager pm = context.getPackageManager();
+						editor.putString("previousLocation", task.getTask());
+						editor.commit();
+						
+						locationNotFound=false;
+						Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
+						if (null != appStartIntent) {
+							context.startActivity(appStartIntent);
 
+						}break;
+					case 1 :
+						
+						
+						MediaPlayer mediaPlayer = new MediaPlayer();
+					try {
+						mediaPlayer.setDataSource(task.getTask());
+						mediaPlayer.prepare();
+						mediaPlayer.start();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+						
+					
+						
+						
 				}
+				
+				
 
 			}
 			
