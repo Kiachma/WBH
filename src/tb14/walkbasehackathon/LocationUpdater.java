@@ -74,21 +74,22 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 		boolean locationNotFound=true;
 		List<Task> tasks = dao.getAllTask();
 		Log.v(TAG,"Begin Loop");
+		String previous = prefs.getString("previousLocation", "");
 		for (Task task : tasks) {
 			double distance = getDistance(task.getLocation().getLatitude(), task.getLocation().getLongitude(), wbLocation.getLatitude(),wbLocation.getLongitude());
 			Log.v(TAG,task.getLocation().getName()+ " : "+ String.valueOf(distance));
-			if (task.getLocation() != null && range > distance && prefs.getString("previousLocation", "")!=task.getTask()) {
-				switch(task.getType()){
+			if (range > distance) {
+				locationNotFound=false;
+				if (task.getLocation() != null  && !previous.equals(task.getTask())) {
+
+					editor.putString("previousLocation", task.getTask());
+					editor.commit();
+					switch(task.getType()){
 					case 0 :
 						PackageManager pm = context.getPackageManager();
-						editor.putString("previousLocation", task.getTask());
-						editor.commit();
-						
-						locationNotFound=false;
 						Intent appStartIntent = pm.getLaunchIntentForPackage(task.getTask());
 						if (null != appStartIntent) {
 							context.startActivity(appStartIntent);
-
 						}break;
 					case 1 :				
 						MediaPlayer mediaPlayer = new MediaPlayer();
@@ -97,16 +98,12 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 							mediaPlayer.prepare();
 							mediaPlayer.start();
 						} catch (IllegalArgumentException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (SecurityException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (IllegalStateException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						break;
@@ -117,13 +114,10 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 				        PendingIntent pi = PendingIntent.getActivity(context, 0, new Intent(), 0); 
 				        sms.sendTextMessage(number, null, message, pi, null);  
 						break;
-						
-				}
-				
-				
+					}
 
+				}
 			}
-			
 		}
 		Log.v(TAG,"End Loop");
 		if (prefs.getLong("timestamp", 1) != wbLocation.getTimestamp()) {
