@@ -26,7 +26,7 @@ public class LocationUpdater extends BroadcastReceiver implements WBLocationList
 
 	final public static String TAG = "WBH BG Update";
 	final static long INTERVAL = 10000;
-	final static int range =10;
+	final static int range =5;
 	private WBLocationManager locationmanager;
 	private SharedPreferences prefs;
 	private Editor editor;
