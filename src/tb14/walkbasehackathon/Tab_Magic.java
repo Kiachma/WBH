@@ -1,5 +1,6 @@
 package tb14.walkbasehackathon;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +13,14 @@ import tb14.walkbasehackathon.DTO.Location;
 import tb14.walkbasehackathon.DTO.Task;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,11 +44,12 @@ public class Tab_Magic extends Fragment {
 	List<PackageInfo> packages;
 	private final String TAG = "MAGIX";
 	List<Task> tasks;
+	private Context ctx;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	
     	final View view = inflater.inflate(R.layout.tab_magic, container, false);
-    	
+    	ctx = view.getContext();
     	
     	locationDAO = new LocationDAO(view.getContext());
 		locationDAO.open();
@@ -55,6 +62,7 @@ public class Tab_Magic extends Fragment {
 		initializeTaskTypeSpinner(view);
 		//initializeTaskSpinner(view);
 		initializeListView(view,adapter);
+		
 		Button addTaskButton = (Button)view.findViewById(R.id.add_task);
 		
 		addTaskButton.setOnClickListener(new OnClickListener() {
@@ -71,7 +79,7 @@ public class Tab_Magic extends Fragment {
 				task.setLocation((Location)locationSpinner.getSelectedItem());
 				switch((int)typeSpinner.getSelectedItemId()){
 					case 0:task.setTask(((PackageInfo)taskSpinner.getSelectedItem()).packageName);break;
-					case 1:task.setTask(((HashMap<String,String>)taskSpinner.getSelectedItem()).get("songPath"));
+					case 1:	task.setTask(uri);
 				}
 				task = locationDAO.createTask(task);
 				adapter.add(task);
@@ -81,6 +89,15 @@ public class Tab_Magic extends Fragment {
 		
         // Inflate the layout for this fragment
         return view;
+    }
+    
+    private String uri;
+    @Override
+	public void onActivityResult(int aRequestCode, int aResultCode, Intent aData) {
+    	if (aData!=null) {
+    		uri = aData.getDataString();
+    	}
+        super.onActivityResult(aRequestCode, aResultCode, aData);
     }
 
 	private void initializeTaskTypeSpinner(final View view) {
@@ -99,9 +116,11 @@ public class Tab_Magic extends Fragment {
 					break;
 					
 				case 1:
-					SongManager songManager = new SongManager();
-					ArrayList<HashMap<String,String>> songList=songManager.getPlayList(songManager.MEDIA_PATH);
-					initializeMusicSpinner(view,songList);break;
+					Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+					intent.setType("audio/*");
+					Intent c = Intent.createChooser(intent, "Select soundfile");
+					startActivityForResult(c,1);
+					break;
 		 }
 		} 
 		  @Override     
@@ -146,17 +165,16 @@ public class Tab_Magic extends Fragment {
 					final int position, long id) {
 				// When clicked, show a toast with the TextView text
 				AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-				builder.setMessage("WAAAAAH").setTitle("Weh?");
-				builder.setPositiveButton("HOKAY", new DialogInterface.OnClickListener() {
+				builder.setMessage("Confirm deletion of\n"+adapter.getItem(position).getTask()).setTitle("Delete?");
+				builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						Log.v(TAG, "DELETE EVERYTHING!");
 					    Task task = (Task) adapter.getItem(position);
 					    locationDAO.deleteTask(task);
 					    adapter.remove(task);
 					}
 				});
-				builder.setNegativeButton("NO, I CLEAN!", null);
+				builder.setNegativeButton("Cancel", null);
 
 				
 				AlertDialog dialog = builder.create();
