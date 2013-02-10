@@ -113,6 +113,7 @@ public class Tab_Magic extends Fragment {
 					List<PackageInfo> packages = pm
 							.getInstalledPackages(PackageManager.GET_META_DATA);
 					initializeTaskSpinner(view, packages);
+					taskSpinner.setVisibility(View.VISIBLE);
 					break;
 					
 				case 1:
@@ -120,6 +121,7 @@ public class Tab_Magic extends Fragment {
 					intent.setType("audio/*");
 					Intent c = Intent.createChooser(intent, "Select soundfile");
 					startActivityForResult(c,1);
+					taskSpinner.setVisibility(View.GONE);
 					break;
 		 }
 		} 
